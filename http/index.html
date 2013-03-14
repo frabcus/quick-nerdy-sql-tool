@@ -23,9 +23,13 @@
 	float: right;
 	height: 100%;
       }
-      #editor, #output {
+      #editor, #table {
 	width: 100%;
 	height: 80%;
+      }
+      #table {
+        overflow: auto;
+	display: block;
       }
       #runPanel {
 	position: absolute;
@@ -76,7 +80,7 @@
    </div>
 
    <div id="outputPanel">
-     <div id="output"></div>
+     <table class="table table-striped" id="table"> </div>
    </div>
 
    <div id="metaPanel">
@@ -85,7 +89,7 @@
 	Help
 	<span class="caret"></span>
       </a>
-      <ul class="dropdown-menu">
+      <ul class="dropdown-menu pull-right">
 	<li><a href="http://zetcode.com/db/sqlite/select/" target="_blank">Basic SQL tutorial</a></li>
 	<li class="divider"></li>
 	<li><a href="http://www.sqlite.org/lang_corefunc.html" target="_blank">SQLite core functions</a></li>
@@ -98,7 +102,6 @@
 
    <script>
     var editor
-    var output
     var run = function() {
       $(".alert").remove()
       $('#run').addClass('loading').attr('disabled', true)
@@ -107,9 +110,28 @@
       cmd = cmd + "mv code/query.sql.$$.new code/query.sql"
       scraperwiki.exec(cmd, function () {
 	scraperwiki.sql(code, function (response) {
-	    output.getSession().setMode("ace/mode/json")
-	    output.setValue(JSON.stringify(response, null, 2))
-	    output.clearSelection()
+	    $('#table').empty()
+
+	    if (!response || response.length < 1) {
+              $('#table').append('<div class="well">No data in table</div>')
+            } else {
+              var $head = $('<thead><tr></tr></thead>')
+	      $.each(response[0], function (key, value) {
+                $('tr', $head).append('<th>' + key + '</th>')
+	      })
+             
+              $('#table').append($head)
+
+	      var $tbody = $('<tbody></tbody>')
+	      $.each(response, function (ix, table) {
+                var $row = $('<tr></tr>')
+		$.each(table, function (key, value) {
+                  $row.append('<td>' + value + '</td>')
+		})
+                $tbody.append($row)
+	      })
+              $('#table').append($tbody)
+            }
 	    $('#run').removeClass('loading').attr('disabled', false)
 	}, function (response) {
             scraperwiki.alert("Error!", response.responseText, true)
@@ -138,10 +160,6 @@
 	  run()
 	}
       })
-
-      output = ace.edit("output")
-      output.setTheme("ace/theme/monokai")
-      output.setReadOnly(true)
 
       $('#run').on('click', run)
       $(document).bind('keydown', 'ctrl+q', run)
