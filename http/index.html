@@ -84,7 +84,6 @@
 
         var output = ace.edit("output")
         output.setTheme("ace/theme/monokai")
-        output.getSession().setMode("ace/mode/json")
 	output.setReadOnly(true)
 
         $('#run').on('click', function() {
@@ -93,9 +92,11 @@
           cmd = cmd + "mv code/query.sql.$$.new code/query.sql"
 	  scraperwiki.exec(cmd, function () {
 	    scraperwiki.sql(code, function (response) {
+		output.getSession().setMode("ace/mode/json")
 		output.setValue(JSON.stringify(response, null, 4))
 		output.clearSelection()
 	    }, function (response) {
+		output.getSession().setMode("ace/mode/json")
 		output.setValue(JSON.stringify(response, null, 4))
 		output.clearSelection()
 	    })
