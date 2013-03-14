@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>Code your own SQL!</title>
-    <link rel="stylesheet" href="http://x.scraperwiki.com/vendor/style/bootstrap.min.css">
-    <link rel="stylesheet" href="http://x.scraperwiki.com/vendor/style/metro.bootstrap.css">
+    <link rel="stylesheet" href="vendor/css/bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/css/scraperstrap.css">
     <style type="text/css">
       body {
 	padding: 20px;
@@ -42,10 +42,21 @@
       .inserter {
 	cursor: pointer
       }
+      p.loading { 
+	display: none;
+	margin-top: 100px;
+	padding-top: 50px;
+	text-align: center;
+	background: transparent url('tool-loader.gif') center top no-repeat;
+	color: #666;
+	font-size: 20px;
+      }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
     <script src="https://x.scraperwiki.com/js/scraperwiki.js"></script>
     <script src="ace/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="jquery.hotkeys-0.7.9.min.js"></script>
+    <script src="vendor/js/bootstrap.min.js"></script>
   </head>
   <body>
 
@@ -55,7 +66,7 @@
 
    <div id="runPanel">
      <form id="tw" action="#" method="POST" enctype="multipart/form-data">
-	<input type="button" class="btn btn-primary" value="Run &gt;" id="run">
+	<input type="button" class="btn btn-primary" value="Query &gt;" id="run">
 	<br>
      </form>
    </div>
@@ -84,23 +95,32 @@
 
         var output = ace.edit("output")
         output.setTheme("ace/theme/monokai")
-        output.getSession().setMode("ace/mode/json")
 	output.setReadOnly(true)
 
-        $('#run').on('click', function() {
+	var run = function() {
+          $('#run').addClass('loading').attr('disabled', true)
           var code = editor.getValue();
           var cmd = "mkdir -p code; cat >code/query.sql.$$.new <<ENDOFSCRAPER\n" + code + "\nENDOFSCRAPER\n"
           cmd = cmd + "mv code/query.sql.$$.new code/query.sql"
 	  scraperwiki.exec(cmd, function () {
 	    scraperwiki.sql(code, function (response) {
+		output.getSession().setMode("ace/mode/json")
 		output.setValue(JSON.stringify(response, null, 4))
 		output.clearSelection()
+		$('#run').removeClass('loading').attr('disabled', false)
 	    }, function (response) {
+		output.getSession().setMode("ace/mode/json")
 		output.setValue(JSON.stringify(response, null, 4))
 		output.clearSelection()
+		$('#run').removeClass('loading').attr('disabled', false)
 	    })
-	  }, function (jqXHR, textStatus, errorThrown) { scraperwiki.alert("Error saving query:", textStatus) } )
-        })
+	  }, function (jqXHR, textStatus, errorThrown) { 
+	    scraperwiki.alert("Error saving query:", textStatus) 
+	    $('#run').removeClass('loading').attr('disabled', false)
+  	  })
+        }
+        $('#run').on('click', run)
+ 	$(document).bind('keydown', 'ctrl+r', run)
 
 	scraperwiki.sql.meta(function (response) {
 	  $.each(response.table, function (table_name, table) {
