@@ -28,10 +28,12 @@
 	height: 80%;
       }
       #runPanel {
+	position: absolute;
 	width: 10%;
 	text-align: center;
-	float: left;
-	margin-top: 25%;
+	bottom: 50%;
+	left: 45%;
+	right: 45%;
       }
       #metaPanel {
 	position: absolute;
@@ -97,7 +99,7 @@
 		output.setValue(JSON.stringify(response, null, 4))
 		output.clearSelection()
 	    })
-	 })
+	  }, function (jqXHR, textStatus, errorThrown) { scraperwiki.alert("Error saving query:", textStatus) } )
         })
 
 	scraperwiki.sql.meta(function (response) {
@@ -125,7 +127,7 @@
             editor.focus()
 	    lastCursorPosition = editor.getCursorPosition()
 	  })
-	})
+	}, function (jqXHR, textStatus, errorThrown) { scraperwiki.alert("Error getting schema:", textStatus) } )
     })
     </script>
 
