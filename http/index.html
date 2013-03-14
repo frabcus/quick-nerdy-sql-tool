@@ -6,22 +6,38 @@
     <link rel="stylesheet" href="http://x.scraperwiki.com/vendor/style/bootstrap.min.css">
     <link rel="stylesheet" href="http://x.scraperwiki.com/vendor/style/metro.bootstrap.css">
     <style type="text/css">
-	body {
-        padding: 20px;
-        height: 100%;
-	}
-	html {
-        height: 100%;
-	}
-    #editor { 
-        width: 100%;
-        height: 35%;
-    }
-    #output { 
-        width: 100%;
-        height: 55%;
-    }
-
+      body {
+	padding: 20px;
+	height: 100%;
+      }
+      html {
+	height: 100%;
+      }
+      #editorPanel { 
+	width: 45%;
+	float: left;
+	height: 100%;
+      }
+      #outputPanel { 
+	width: 45%;
+	float: right;
+	height: 100%;
+      }
+      #runPanel {
+	width: 10%;
+	margin: auto;
+	text-align: center;
+	float: left;
+	margin-top: 25%;
+      }
+      #metaPanel {
+	position: absolute;
+	bottom: 0px;
+      }
+      #editor, #output {
+	width: 100%;
+	height: 80%;
+      }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
     <script src="https://x.scraperwiki.com/js/scraperwiki.js"></script>
@@ -29,14 +45,26 @@
   </head>
   <body>
 
-   <div id="editor"></div>
+   <div id="editorPanel">
+     <h3>Query</h3>
+     <div id="editor"></div>
+   </div>
 
-   <form id="tw" action="#" method="POST" enctype="multipart/form-data">
-      <input type="button" value="Query!" id="run">
-      <br>
-    </form>
+   <div id="runPanel">
+     <form id="tw" action="#" method="POST" enctype="multipart/form-data">
+	<input type="button" class="btn btn-primary" value="Run &gt;" id="run">
+	<br>
+     </form>
+   </div>
 
-   <div id="output"></div>
+   <div id="outputPanel">
+     <h3>Result</h3>
+     <div id="output"></div>
+   </div>
+
+   <div id="metaPanel">
+     <div id="meta"> </div>
+   </div>
 
    <script>
    $(document).ready(function() {
@@ -68,6 +96,17 @@
 	    })
 	 })
         })
+
+	scraperwiki.sql.meta(function (response) {
+	  console.log(response)
+	  $.each(response.table, function (table_name, table) {
+	    // table.type // either "table" or "view" I think
+	    var html = '<b>' + table_name + '</b>: ' + table.columnNames.join(', ') + "<br>"
+	    var $table = $(html)
+	    $('#meta').append($table)
+	    $('#meta').append($table)
+	  })
+	})
     })
     </script>
 
