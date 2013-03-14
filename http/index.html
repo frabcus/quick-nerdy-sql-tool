@@ -66,7 +66,7 @@
 
    <div id="runPanel">
      <form id="tw" action="#" method="POST" enctype="multipart/form-data">
-	<input type="button" class="btn btn-primary" value="Query &gt;" id="run">
+	<input type="button" class="btn btn-primary" value="Query &gt;" id="run" title="Ctrl+Q">
 	<br>
      </form>
    </div>
@@ -83,6 +83,7 @@
    $(document).ready(function() {
         var editor = ace.edit("editor")
         scraperwiki.exec('mkdir -p code; touch code/query.sql; cat code/query.sql', function(data) {
+	  data = data.replace(/\s\s*$/, '')
 	  if (data == "") {
 	    data = "select * from "
 	  }
@@ -99,7 +100,7 @@
 
 	var run = function() {
           $('#run').addClass('loading').attr('disabled', true)
-          var code = editor.getValue();
+          var code = editor.getValue()
           var cmd = "mkdir -p code; cat >code/query.sql.$$.new <<ENDOFSCRAPER\n" + code + "\nENDOFSCRAPER\n"
           cmd = cmd + "mv code/query.sql.$$.new code/query.sql"
 	  scraperwiki.exec(cmd, function () {
@@ -120,7 +121,7 @@
   	  })
         }
         $('#run').on('click', run)
- 	$(document).bind('keydown', 'ctrl+r', run)
+ 	$(document).bind('keydown', 'ctrl+q', run)
 
 	scraperwiki.sql.meta(function (response) {
 	  $.each(response.table, function (table_name, table) {
