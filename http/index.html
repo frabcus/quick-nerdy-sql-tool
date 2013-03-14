@@ -38,6 +38,8 @@
       #metaPanel {
 	position: absolute;
 	bottom: 20px;
+	right: 20px;
+	left: 20px;
       }
       .inserter {
 	cursor: pointer
@@ -50,6 +52,11 @@
 	background: transparent url('tool-loader.gif') center top no-repeat;
 	color: #666;
 	font-size: 20px;
+      }
+      #help {
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
       }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
@@ -65,10 +72,7 @@
    </div>
 
    <div id="runPanel">
-     <form id="tw" action="#" method="POST" enctype="multipart/form-data">
-	<input type="button" class="btn btn-primary" value="Query &gt;" id="run" title="Ctrl+Q">
-	<br>
-     </form>
+     <input type="button" class="btn btn-primary" value="Query &gt;" id="run" title="Ctrl+Q">
    </div>
 
    <div id="outputPanel">
@@ -76,6 +80,19 @@
    </div>
 
    <div id="metaPanel">
+    <div class="btn-group dropup" id="help">
+      <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
+	Help
+	<span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+	<li><a href="http://zetcode.com/db/sqlite/select/" target="_blank">Basic SQL tutorial</a></li>
+	<li class="divider"></li>
+	<li><a href="http://www.sqlite.org/lang_corefunc.html" target="_blank">SQLite core functions</a></li>
+	<li><a href="http://www.sqlite.org/lang_datefunc.html" target="_blank">SQLite date/time functions</a></li>
+	<li><a href="http://www.sqlite.org/lang_aggfunc.html" target="_blank">SQLite aggregate functions</a></li>
+      </ul>
+    </div>
      <div id="meta"> </div>
    </div>
 
