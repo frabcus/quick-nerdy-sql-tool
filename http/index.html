@@ -80,75 +80,82 @@
    </div>
 
    <script>
-   $(document).ready(function() {
-        var editor = ace.edit("editor")
-        scraperwiki.exec('mkdir -p code; touch code/query.sql; cat code/query.sql', function(data) {
-	  data = data.replace(/\s\s*$/, '')
-	  if (data == "") {
-	    data = "select * from "
-	  }
-          editor.setValue(data)
-          editor.setTheme("ace/theme/monokai")
-          editor.getSession().setMode("ace/mode/sql")
-          editor.clearSelection()
-          editor.focus()
-        })
-
-        var output = ace.edit("output")
-        output.setTheme("ace/theme/monokai")
-	output.setReadOnly(true)
-
-	var run = function() {
-          $('#run').addClass('loading').attr('disabled', true)
-          var code = editor.getValue()
-          var cmd = "mkdir -p code; cat >code/query.sql.$$.new <<ENDOFSCRAPER\n" + code + "\nENDOFSCRAPER\n"
-          cmd = cmd + "mv code/query.sql.$$.new code/query.sql"
-	  scraperwiki.exec(cmd, function () {
-	    scraperwiki.sql(code, function (response) {
-		output.getSession().setMode("ace/mode/json")
-		output.setValue(JSON.stringify(response, null, 4))
-		output.clearSelection()
-		$('#run').removeClass('loading').attr('disabled', false)
-	    }, function (response) {
-		output.getSession().setMode("ace/mode/json")
-		output.setValue(JSON.stringify(response, null, 4))
-		output.clearSelection()
-		$('#run').removeClass('loading').attr('disabled', false)
-	    })
-	  }, function (jqXHR, textStatus, errorThrown) { 
-	    scraperwiki.alert("Error saving query:", textStatus) 
+    var editor
+    var output
+    var run = function() {
+      $('#run').addClass('loading').attr('disabled', true)
+      var code = editor.getValue()
+      var cmd = "mkdir -p code; cat >code/query.sql.$$.new <<ENDOFSCRAPER\n" + code + "\nENDOFSCRAPER\n"
+      cmd = cmd + "mv code/query.sql.$$.new code/query.sql"
+      scraperwiki.exec(cmd, function () {
+	scraperwiki.sql(code, function (response) {
+	    output.getSession().setMode("ace/mode/json")
+	    output.setValue(JSON.stringify(response, null, 4))
+	    output.clearSelection()
 	    $('#run').removeClass('loading').attr('disabled', false)
-  	  })
-        }
-        $('#run').on('click', run)
- 	$(document).bind('keydown', 'ctrl+q', run)
+	}, function (response) {
+	    output.getSession().setMode("ace/mode/json")
+	    output.setValue(JSON.stringify(response, null, 4))
+	    output.clearSelection()
+	    $('#run').removeClass('loading').attr('disabled', false)
+	})
+      }, function (jqXHR, textStatus, errorThrown) { 
+	scraperwiki.alert("Error saving query:", textStatus) 
+	$('#run').removeClass('loading').attr('disabled', false)
+      })
+    }
+    $(document).ready(function() {
+      editor = ace.edit("editor")
+      scraperwiki.exec('mkdir -p code; touch code/query.sql; cat code/query.sql', function(data) {
+	var firstTime = false
+	data = data.replace(/\s\s*$/, '')
+	if (data == "") {
+	  data = "select * from "
+	  firstTime = true
+	}
+	editor.setValue(data)
+	editor.setTheme("ace/theme/monokai")
+	editor.getSession().setMode("ace/mode/sql")
+	editor.clearSelection()
+	editor.focus()
+	if (!firstTime) {
+	  run()
+	}
+      })
 
-	scraperwiki.sql.meta(function (response) {
-	  $.each(response.table, function (table_name, table) {
-	    // either "table" or "view" I think
-	    var extra_class = ''
-	    if (table.type != "table") {
-	      extra_class = 'badge-info'
-	    }
-	    var html = '<span class="inserter badge ' + extra_class + ' ">' + table_name + '</span> ' + 
-	      $.map(table.columnNames, function(col) { return '<span class="inserter">' + col + '</span>' }).join(', ') 
-	      + "<br>"
-	    var $table = $(html)
-	    $('#meta').append($table)
-	  })
-	  var lastCursorPosition = -1
-	  editor.on('change', function() {
-	    lastCursorPosition = -1
-	  })
-	  $('.inserter').click(function() {
-	    if (JSON.stringify(lastCursorPosition) == JSON.stringify(editor.getCursorPosition())) {
-	      editor.insert(', ')
-	    }
-	    editor.insert($(this).text())
-            editor.focus()
-	    lastCursorPosition = editor.getCursorPosition()
-	  })
-	}, function (jqXHR, textStatus, errorThrown) { scraperwiki.alert("Error getting schema:", textStatus) } )
+      output = ace.edit("output")
+      output.setTheme("ace/theme/monokai")
+      output.setReadOnly(true)
+
+      $('#run').on('click', run)
+      $(document).bind('keydown', 'ctrl+q', run)
+
+      scraperwiki.sql.meta(function (response) {
+	$.each(response.table, function (table_name, table) {
+	  // either "table" or "view" I think
+	  var extra_class = ''
+	  if (table.type != "table") {
+	    extra_class = 'badge-info'
+	  }
+	  var html = '<span class="inserter badge ' + extra_class + ' ">' + table_name + '</span> ' + 
+	    $.map(table.columnNames, function(col) { return '<span class="inserter">' + col + '</span>' }).join(', ') 
+	    + "<br>"
+	  var $table = $(html)
+	  $('#meta').append($table)
+	})
+	var lastCursorPosition = -1
+	editor.on('change', function() {
+	  lastCursorPosition = -1
+	})
+	$('.inserter').click(function() {
+	  if (JSON.stringify(lastCursorPosition) == JSON.stringify(editor.getCursorPosition())) {
+	    editor.insert(', ')
+	  }
+	  editor.insert($(this).text())
+	  editor.focus()
+	  lastCursorPosition = editor.getCursorPosition()
+	})
+      }, function (jqXHR, textStatus, errorThrown) { scraperwiki.alert("Error getting schema:", textStatus) } )
     })
     </script>
 
