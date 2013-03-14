@@ -100,6 +100,7 @@
     var editor
     var output
     var run = function() {
+      $(".alert").remove()
       $('#run').addClass('loading').attr('disabled', true)
       var code = editor.getValue()
       var cmd = "mkdir -p code; cat >code/query.sql.$$.new <<ENDOFSCRAPER\n" + code + "\nENDOFSCRAPER\n"
@@ -111,13 +112,11 @@
 	    output.clearSelection()
 	    $('#run').removeClass('loading').attr('disabled', false)
 	}, function (response) {
-	    output.getSession().setMode("ace/mode/json")
-	    output.setValue(JSON.stringify(response, null, 4))
-	    output.clearSelection()
+            scraperwiki.alert("Error!", response.responseText, true)
 	    $('#run').removeClass('loading').attr('disabled', false)
 	})
       }, function (jqXHR, textStatus, errorThrown) { 
-	scraperwiki.alert("Error saving query:", textStatus) 
+	scraperwiki.alert("Error saving query:", textStatus, true) 
 	$('#run').removeClass('loading').attr('disabled', false)
       })
     }
@@ -172,7 +171,7 @@
 	  editor.focus()
 	  lastCursorPosition = editor.getCursorPosition()
 	})
-      }, function (jqXHR, textStatus, errorThrown) { scraperwiki.alert("Error getting schema:", textStatus) } )
+      }, function (jqXHR, textStatus, errorThrown) { scraperwiki.alert("Error getting schema:", textStatus, true) } )
     })
     </script>
 
