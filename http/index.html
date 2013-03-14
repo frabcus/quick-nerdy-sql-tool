@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title>Code your own SQL!</title>
-    <link rel="stylesheet" href="http://x.scraperwiki.com/vendor/style/bootstrap.min.css">
-    <link rel="stylesheet" href="http://x.scraperwiki.com/vendor/style/metro.bootstrap.css">
+    <link rel="stylesheet" href="vendor/style/bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/style/scraperstrap.css">
+    <script src="vendor/js/bootstrap.min.js"></script>
     <style type="text/css">
       body {
 	padding: 20px;
@@ -41,6 +42,15 @@
       }
       .inserter {
 	cursor: pointer
+      }
+      p.loading { 
+	display: none;
+	margin-top: 100px;
+	padding-top: 50px;
+	text-align: center;
+	background: transparent url('tool-loader.gif') center top no-repeat;
+	color: #666;
+	font-size: 20px;
       }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
@@ -87,6 +97,7 @@
 	output.setReadOnly(true)
 
         $('#run').on('click', function() {
+          $('#run').addClass('loading').attr('disabled', true)
           var code = editor.getValue();
           var cmd = "mkdir -p code; cat >code/query.sql.$$.new <<ENDOFSCRAPER\n" + code + "\nENDOFSCRAPER\n"
           cmd = cmd + "mv code/query.sql.$$.new code/query.sql"
@@ -95,12 +106,17 @@
 		output.getSession().setMode("ace/mode/json")
 		output.setValue(JSON.stringify(response, null, 4))
 		output.clearSelection()
+		$('#run').removeClass('loading').attr('disabled', false)
 	    }, function (response) {
 		output.getSession().setMode("ace/mode/json")
 		output.setValue(JSON.stringify(response, null, 4))
 		output.clearSelection()
+		$('#run').removeClass('loading').attr('disabled', false)
 	    })
-	  }, function (jqXHR, textStatus, errorThrown) { scraperwiki.alert("Error saving query:", textStatus) } )
+	  }, function (jqXHR, textStatus, errorThrown) { 
+	    scraperwiki.alert("Error saving query:", textStatus) 
+	    $('#run').removeClass('loading').attr('disabled', false)
+  	  })
         })
 
 	scraperwiki.sql.meta(function (response) {
