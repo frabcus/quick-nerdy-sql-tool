@@ -23,20 +23,20 @@
 	float: right;
 	height: 100%;
       }
+      #editor, #output {
+	width: 100%;
+	height: 80%;
+      }
       #runPanel {
 	width: 10%;
-	margin: auto;
 	text-align: center;
 	float: left;
 	margin-top: 25%;
       }
       #metaPanel {
 	position: absolute;
-	bottom: 0px;
-      }
-      #editor, #output {
-	width: 100%;
-	height: 80%;
+	top: 84%;
+	height: 18%;
       }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
@@ -46,7 +46,6 @@
   <body>
 
    <div id="editorPanel">
-     <h3>Query</h3>
      <div id="editor"></div>
    </div>
 
@@ -58,7 +57,6 @@
    </div>
 
    <div id="outputPanel">
-     <h3>Result</h3>
      <div id="output"></div>
    </div>
 
@@ -70,6 +68,9 @@
    $(document).ready(function() {
         var editor
         scraperwiki.exec('mkdir -p code; touch code/query.sql; cat code/query.sql', function(data) {
+	  if (data == "") {
+	    data = "select * from "
+	  }
           editor = ace.edit("editor")
           editor.setValue(data)
           editor.setTheme("ace/theme/monokai")
@@ -81,6 +82,7 @@
         var output = ace.edit("output")
         output.setTheme("ace/theme/monokai")
         output.getSession().setMode("ace/mode/json")
+	output.setReadOnly(true)
 
         $('#run').on('click', function() {
           var code = editor.getValue();
@@ -100,8 +102,12 @@
 	scraperwiki.sql.meta(function (response) {
 	  console.log(response)
 	  $.each(response.table, function (table_name, table) {
-	    // table.type // either "table" or "view" I think
-	    var html = '<b>' + table_name + '</b>: ' + table.columnNames.join(', ') + "<br>"
+	    // either "table" or "view" I think
+	    var extra_class = ''
+	    if (table.type != "table") {
+	      extra_class = 'badge-info'
+	    }
+	    var html = '<span class="badge ' + extra_class + ' ">' + table_name + '</span> ' + table.columnNames.join(', ') + "<br>"
 	    var $table = $(html)
 	    $('#meta').append($table)
 	    $('#meta').append($table)
