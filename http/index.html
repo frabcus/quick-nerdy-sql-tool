@@ -14,12 +14,19 @@
       html {
 	height: 100%;
       }
+      #schemaPanel { 
+	position: absolute;
+	bottom: 30px;
+        top: 20px;
+	right: 80%;
+	left: 20px;
+      }
       #editorPanel { 
 	position: absolute;
 	bottom: 20px;
         top: 20px;
 	right: 51%;
-	left: 20px;
+	left: 20%;
       }
       #outputPanel { 
 	position: absolute;
@@ -75,6 +82,11 @@
   </head>
   <body>
 
+   <div id="schemaPanel">
+     <div id="schema"><h1>Schema</h1></div>
+     </div>
+ </div>
+
    <div id="editorPanel">
      <div id="editor"></div>
    </div>
@@ -104,7 +116,6 @@
    <div id="outputPanel">
      <table class="table table-striped" id="table"> </div>
      <div id="problem"></div>
-     <div id="schema"><h1>Schema</h1></div>
    </div>
 
 
@@ -128,7 +139,6 @@
 	      })
              
 	      $('#problem').hide()
-	      $('#schema').hide()
 	      $('#table').empty()
               $('#table').append($head)
 
@@ -146,7 +156,6 @@
 	}, function (response) {
             err("Error in SQL", jQuery.parseJSON(response.responseText))
 	    $('#run').removeClass('loading').attr('disabled', false)
-	    $('#schema').show()
 	})
       }, function (jqXHR, textStatus, errorThrown) { 
 	err("Error saving query", textStatus) 
@@ -187,7 +196,7 @@
 
       scraperwiki.sql.meta(function (response) {
 	$.each(response.table, function (table_name, table) {
-	  var html = '<h2 class="inserter">' + table_name + '</h2> <ul class="inline">' + 
+	  var html = '<h2 class="inserter">' + table_name + '</h2> <ul>' + 
 	    $.map(table.columnNames, function(col) { return '<li class="inserter">' + col + '</li>' }).join('') 
 	    + "</ul>"
 	  var $table = $(html)
