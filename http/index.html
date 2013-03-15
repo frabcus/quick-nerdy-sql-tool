@@ -76,7 +76,9 @@
    </div>
 
    <div id="runPanel">
-     <input type="button" class="btn btn-primary" value="Query &gt;" id="run" title="Ctrl+Q">
+     <button type="button" class="btn btn-primary" id="run" title="Ctrl+Q">
+     Query <i class="icon-arrow-right icon-white"></i>
+     </button>
    </div>
 
    <div id="outputPanel">
@@ -144,6 +146,11 @@
     }
     $(document).ready(function() {
       editor = ace.edit("editor")
+      editor.renderer.setShowGutter(false)
+      editor.setTheme("ace/theme/monokai")
+      //editor.setTheme("ace/theme/clouds")
+      //editor.setTheme("ace/theme/chrome")
+      editor.getSession().setMode("ace/mode/sql")
       scraperwiki.exec('mkdir -p code; touch code/query.sql; cat code/query.sql', function(data) {
 	var firstTime = false
 	data = data.replace(/\s\s*$/, '')
@@ -152,8 +159,6 @@
 	  firstTime = true
 	}
 	editor.setValue(data)
-	editor.setTheme("ace/theme/monokai")
-	editor.getSession().setMode("ace/mode/sql")
 	editor.clearSelection()
 	editor.focus()
 	if (!firstTime) {
