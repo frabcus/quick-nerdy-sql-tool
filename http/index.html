@@ -163,7 +163,7 @@
     $(document).ready(function() {
       editor = ace.edit("editor")
       editor.renderer.setShowGutter(false)
-      editor.setTheme("ace/theme/monokai")
+      editor.setTheme("ace/theme/clouds")
       editor.getSession().setMode("ace/mode/sql")
       editor.renderer.setPadding(40) 
       scraperwiki.exec('mkdir -p code; touch code/query.sql; cat code/query.sql', function(data) {
