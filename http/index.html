@@ -109,6 +109,7 @@
 
    <script>
     var editor
+
     var run = function() {
       $(".alert").remove()
       $('#run').addClass('loading').attr('disabled', true)
@@ -120,7 +121,7 @@
 	    $('#table').empty()
 
 	    if (!response || response.length < 1) {
-              $('#table').append('<div class="well">No data in table</div>')
+	      err("No data", "The table is empty") 
             } else {
               var $head = $('<thead><tr></tr></thead>')
 	      $.each(response[0], function (key, value) {
@@ -141,20 +142,24 @@
             }
 	    $('#run').removeClass('loading').attr('disabled', false)
 	}, function (response) {
-            scraperwiki.alert("Error!", response.responseText, true)
+            err("Error in SQL", jQuery.parseJSON(response.responseText))
 	    $('#run').removeClass('loading').attr('disabled', false)
 	})
       }, function (jqXHR, textStatus, errorThrown) { 
-	scraperwiki.alert("Error saving query:", textStatus, true) 
+	err("Error saving query", textStatus) 
 	$('#run').removeClass('loading').attr('disabled', false)
       })
     }
+
+    var err = function(head, body) {
+      $('#table').empty()
+      $('#table').append('<h1>' + head + '</h1><p>' + body + '</p>')
+    }
+
     $(document).ready(function() {
       editor = ace.edit("editor")
       editor.renderer.setShowGutter(false)
       editor.setTheme("ace/theme/monokai")
-      //editor.setTheme("ace/theme/clouds")
-      //editor.setTheme("ace/theme/chrome")
       editor.getSession().setMode("ace/mode/sql")
       scraperwiki.exec('mkdir -p code; touch code/query.sql; cat code/query.sql', function(data) {
 	var firstTime = false
@@ -199,7 +204,7 @@
 	  editor.focus()
 	  lastCursorPosition = editor.getCursorPosition()
 	})
-      }, function (jqXHR, textStatus, errorThrown) { scraperwiki.alert("Error getting schema:", textStatus, true) } )
+      }, function (jqXHR, textStatus, errorThrown) { err("Error getting schema", textStatus) } )
     })
     </script>
 
