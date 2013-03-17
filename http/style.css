@@ -144,6 +144,16 @@
     margin-bottom: 5px;
   }
 
+  #schemaPanel li .example {
+    font-size: 12px;
+    display: inline;
+    display: none;
+  }
+  #schemaPanel li:hover .example {
+    font-size: 12px;
+    display: inline;
+  }
+
   table th:first-child,
   table td:first-child {
     padding-left: 20px;

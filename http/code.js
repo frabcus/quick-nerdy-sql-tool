@@ -155,6 +155,18 @@ var run = function() {
   real_run_throttled()
 }
 
+// http://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
+String.prototype.hashCode = function(){
+    var hash = 0, i, char;
+    if (this.length == 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        char = this.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+};
+
 var meta = null
 var get_meta = function() {
   scraperwiki.sql.meta(function (response) {
@@ -164,10 +176,25 @@ var get_meta = function() {
     $.each(response.table, function (table_name, table) {
       var html = '<h2 class="inserter">' + table_name + '</h2> <ul>'
       _.each(table.columnNames, function(colname){
-        html += '<li class="inserter">' + colname + '</li>'
+        html += '<li id="colhelp' + table_name.hashCode() + colname.hashCode() + '"><span class="inserter">' + colname + '<span></li>'
       })
       html += '</ul>'
       $('#schema').append(html)
+
+      scraperwiki.sql("select * from " + table_name + " order by random() limit 3", function (response) {
+        if (!response) {
+          return
+        }
+  	$.each(response[0], function (key, value) {
+	  var code = '#colhelp' + table_name.hashCode() + key.hashCode()
+	  var txt = "(e.g. '" + value + "'"
+	  if (response.length > 1) {
+	    txt += ", '" + response[1][key] + "'"
+          }
+	  txt += ")</span>"
+	  $(code).append(" <span class='example'>" + txt + "</span>")
+  	})
+       }, function (jqXHR, textStatus, errorThrown) { err("Error getting sample rows", textStatus, true) } )
     })
 
     var lastCursorPosition = -1
