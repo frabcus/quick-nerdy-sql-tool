@@ -98,23 +98,42 @@ var load = function() {
 }
 var use_default_query_if_needed = function() {
   if (meta && loaded_empty) {
-    table = Object.keys(meta.table)[0]
-    cols = meta.table[table].columnNames
-    data = "select \n" + 
-    	"\t" + cols.slice(0, 3).join(",\n\t") + "\n" + 
-        "from " + table + "\n"
-    if (cols.length > 2) {
-        data += "-- where " + cols[Math.min(cols.length, 2)] + " > \n" +
-		"order by " + cols[1] + "\n"
-    }
-    data += "limit 20" + "\n"
-    
     if (editor.getValue() == "") {
-      editor.setValue(data)
-      editor.clearSelection()
-      editor.focus()
+      use_default_query()
     }
   }
+}
+var use_default_query = function() {
+  table = Object.keys(meta.table)[0]
+  cols = meta.table[table].columnNames
+  data = "select \n" + 
+      "\t" + cols.slice(0, 3).join(",\n\t") + "\n" + 
+      "from " + table + "\n"
+  if (cols.length > 2) {
+      data += "-- where " + cols[Math.min(cols.length, 2)] + " > \n" +
+	      "order by " + cols[1] + "\n"
+  }
+  data += "limit 20" + "\n"
+  
+  editor.setValue(data)
+  editor.clearSelection()
+  editor.focus()
+}
+var use_group_query = function() {
+  table = Object.keys(meta.table)[0]
+  cols = meta.table[table].columnNames
+  var col = Math.min(cols.length, 2)
+  data = "select \n" + 
+      "\t" + cols[col] + ",\n" +
+      "\tcount(*) as c\n" + 
+      "from " + table + "\n"
+  data += "group by " + cols[col] + "\n"
+  data += "order by c desc\n"
+  data += "limit 20" + "\n"
+  
+  editor.setValue(data)
+  editor.clearSelection()
+  editor.focus()
 }
 
 var clear_run = function() {

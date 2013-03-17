@@ -38,6 +38,13 @@
 	</a>
 	<ul class="dropdown-menu">
 	  <li><a href="http://zetcode.com/db/sqlite/select/" target="_blank">Basic SQL tutorial</a></li>
+	  <li class="dropdown-submenu">
+	    <a tabindex="-1" href="#">Replace your query&hellip;</a>
+	    <ul class="dropdown-menu">
+	       <li><a onClick="use_default_query();"><span class="label label-warning">Warning!</span> Basic example</a></li>
+	       <li><a onClick="use_group_query();"><span class="label label-warning">Warning!</span> Grouping example</a></li>
+	    </ul>
+	  </li>
 	  <li class="divider"></li>
 	  <li><a href="http://www.sqlite.org/lang_corefunc.html" target="_blank">SQLite core functions</a></li>
 	  <li><a href="http://www.sqlite.org/lang_datefunc.html" target="_blank">SQLite date/time functions</a></li>
