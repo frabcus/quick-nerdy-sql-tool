@@ -7,10 +7,11 @@ html {
 }
 #schemaPanel { 
   position: absolute;
-  bottom: 40px;
+  bottom: 60px;
   top: 20px;
   width: 180px;
   left: 20px;
+  overflow: auto;
 }
 #editorPanel { 
   position: absolute;

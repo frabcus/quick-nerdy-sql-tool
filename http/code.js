@@ -1,5 +1,36 @@
 var editor
-var dirty = false
+
+var latest_error
+var latest_error_important = false
+var err = function(head, body, important) {
+  console.log("got an error")
+
+  if (important || !latest_error_important) {
+    latest_error = '<h1>' + head + '</h1><p>' + body + '</p>'
+  }
+
+  clearTimeout(show_latest_error)
+  if (!important) {
+    setTimeout(show_latest_error, 1000)
+  } else {
+    show_latest_error()
+  }
+}
+var show_latest_error = function() {
+  if (latest_error) {
+    console.log("error shown")
+    $('#table').empty()
+    $('#problem').html(latest_error)
+    $('#problem').show()
+  }
+}
+var clear_unimportant_errors = function() {
+  console.log("clear_unimportant_errors", latest_error_important)
+  if (!latest_error_important) {
+    latest_error = null
+    clearTimeout(show_latest_error)
+  }
+}
 
 var real_run = function() {
   console.log("real_run called")
@@ -34,7 +65,7 @@ var real_run = function() {
       clear_run_debounced()
   })
 }
-var real_run_throttled = _.throttle(real_run, 500)
+var real_run_throttled = _.throttle(real_run, 750)
 
 var real_save = function() {
   console.log("real_save called")
@@ -44,30 +75,24 @@ var real_save = function() {
   cmd = cmd + "mv code/query.sql.$$.new code/query.sql"
   scraperwiki.exec(cmd, function () {
   }, function (jqXHR, textStatus, errorThrown) { 
-    err("Error saving query", textStatus) 
+    err("Error saving query", textStatus, true) 
   })
 }
-var real_save_throttled = _.throttle(real_save, 500)
+var real_save_throttled = _.throttle(real_save, 750)
 
 var clear_run = function() {
-  $('#run').removeClass('loading').attr('disabled', false)
+  $('#querying').text("")
 }
-var clear_run_debounced = _.debounce(clear_run, 500)
+var clear_run_debounced = _.debounce(clear_run, 750)
 
 var run = function() {
   console.log("run called")
 
-  $(".alert").remove()
-  $('#run').addClass('loading').attr('disabled', true)
+  $('#querying').text("Querying...")
+  clear_unimportant_errors()
 
   real_save_throttled()
   real_run_throttled()
-}
-
-var err = function(head, body) {
-  $('#table').empty()
-  $('#problem').html('<h1>' + head + '</h1><p>' + body + '</p>')
-  $('#problem').show()
 }
 
 $(document).ready(function() {
@@ -91,8 +116,6 @@ $(document).ready(function() {
     }
   })
 
-  $('#run').on('click', run)
-  $(document).bind('keydown', 'ctrl+q', run)
   editor.on('change', function() {
     run()
   })
@@ -117,6 +140,6 @@ $(document).ready(function() {
       editor.focus()
       lastCursorPosition = editor.getCursorPosition()
     })
-  }, function (jqXHR, textStatus, errorThrown) { err("Error getting schema", textStatus) } )
+  }, function (jqXHR, textStatus, errorThrown) { err("Error getting schema", textStatus, true) } )
 })
 
