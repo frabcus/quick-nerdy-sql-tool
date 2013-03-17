@@ -50,15 +50,6 @@
         overflow: auto;
 	display: block;
       }
-      #runPanel {
-	position: absolute;
-	width: 10%;
-	text-align: center;
-	bottom: 75%;
-	left: 45%;
-	right: 45%;
-	display: none;
-      }
       .inserter {
 	cursor: pointer
       }
@@ -96,13 +87,10 @@
      <div id="editor"></div>
    </div>
 
-   <div id="runPanel">
+   <div id="helpPanel">
      <button type="button" class="btn btn-primary" id="run" title="Ctrl+Q">
      Query <i class="icon-arrow-right icon-white"></i>
      </button>
-   </div>
-
-   <div id="helpPanel">
      <div class="btn-group dropup" id="help">
 	<a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
 	  Help
@@ -116,7 +104,8 @@
 	  <li><a href="http://www.sqlite.org/lang_aggfunc.html" target="_blank">SQLite aggregate functions</a></li>
 	</ul>
       </div>
-     </div>
+      <span id="querying"></span>
+   </div>
 
    <div id="outputPanel">
      <table class="table table-striped" id="table"> </div>
@@ -126,46 +115,71 @@
 
    <script>
     var editor
+    var dirty = false
 
-    var run = function() {
-      $(".alert").remove()
-      $('#run').addClass('loading').attr('disabled', true)
+    var clear_run = function() {
+      $('#querying').text("Up to date")
+      $('#run').removeClass('loading').attr('disabled', false)
+    }
+
+    var real_run = function() {
+      console.log("real_run called")
+
+      var code = editor.getValue()
+      scraperwiki.sql(code, function (response) {
+	  if (!response || response.length < 1) {
+	    err("No data", "The table is empty") 
+	  } else {
+	    var $head = $('<thead><tr></tr></thead>')
+	    $.each(response[0], function (key, value) {
+	      $('tr', $head).append('<th>' + key + '</th>')
+	    })
+	   
+	    $('#problem').hide()
+	    $('#table').empty()
+	    $('#table').append($head)
+
+	    var $tbody = $('<tbody></tbody>')
+	    $.each(response, function (ix, table) {
+	      var $row = $('<tr></tr>')
+	      $.each(table, function (key, value) {
+		$row.append('<td>' + value + '</td>')
+	      })
+	      $tbody.append($row)
+	    })
+	    $('#table').append($tbody)
+	  }
+	  clear_run()
+      }, function (response) {
+	  err("Error in SQL", jQuery.parseJSON(response.responseText))
+	  clear_run()
+      })
+    }
+    var real_run_throttled = _.throttle(real_run, 500)
+
+    var real_save = function() {
+      console.log("real_save called")
+
       var code = editor.getValue()
       var cmd = "mkdir -p code; cat >code/query.sql.$$.new <<ENDOFSCRAPER\n" + code + "\nENDOFSCRAPER\n"
       cmd = cmd + "mv code/query.sql.$$.new code/query.sql"
       scraperwiki.exec(cmd, function () {
-	scraperwiki.sql(code, function (response) {
-	    if (!response || response.length < 1) {
-	      err("No data", "The table is empty") 
-            } else {
-              var $head = $('<thead><tr></tr></thead>')
-	      $.each(response[0], function (key, value) {
-                $('tr', $head).append('<th>' + key + '</th>')
-	      })
-             
-	      $('#problem').hide()
-	      $('#table').empty()
-              $('#table').append($head)
-
-	      var $tbody = $('<tbody></tbody>')
-	      $.each(response, function (ix, table) {
-                var $row = $('<tr></tr>')
-		$.each(table, function (key, value) {
-                  $row.append('<td>' + value + '</td>')
-		})
-                $tbody.append($row)
-	      })
-              $('#table').append($tbody)
-            }
-	    $('#run').removeClass('loading').attr('disabled', false)
-	}, function (response) {
-            err("Error in SQL", jQuery.parseJSON(response.responseText))
-	    $('#run').removeClass('loading').attr('disabled', false)
-	})
       }, function (jqXHR, textStatus, errorThrown) { 
 	err("Error saving query", textStatus) 
-	$('#run').removeClass('loading').attr('disabled', false)
+	clear_run()
       })
+    }
+    var real_save_throttled = _.throttle(real_save, 1000)
+
+    var run = function() {
+      console.log("run called")
+
+      $(".alert").remove()
+      $('#querying').text("Querying...")
+      $('#run').addClass('loading').attr('disabled', true)
+
+      real_save_throttled()
+      real_run_throttled()
     }
 
     var err = function(head, body) {
@@ -197,7 +211,9 @@
 
       $('#run').on('click', run)
       $(document).bind('keydown', 'ctrl+q', run)
-      editor.on('change', _.debounce(run, 1000))
+      editor.on('change', function() {
+	run()
+      })
 
       scraperwiki.sql.meta(function (response) {
 	$.each(response.table, function (table_name, table) {
