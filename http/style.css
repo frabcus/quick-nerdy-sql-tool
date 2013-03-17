@@ -78,3 +78,14 @@ p.loading {
   list-style-type: none;
 }
 
+div#loading {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  background: transparent url('tool-loader.gif') no-repeat;
+  color: #666;
+  display: none;
+}
+

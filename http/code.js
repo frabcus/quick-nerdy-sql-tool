@@ -117,14 +117,14 @@ var use_default_query_if_needed = function() {
 }
 
 var clear_run = function() {
-  $('#querying').text("")
+  $('#loading').hide()
 }
 var clear_run_debounced = _.debounce(clear_run, 750)
 
 var run = function() {
   console.log("run called")
 
-  $('#querying').text("Querying...")
+  $('#loading').show()
   clear_unimportant_errors()
 
   real_save_throttled()
