@@ -37,6 +37,8 @@ var real_run = function() {
 
   var code = editor.getValue()
   scraperwiki.sql(code, function (response) {
+      clear_unimportant_errors()
+
       if (!response || response.length < 1) {
 	err("No data", "The table is empty") 
       } else {
@@ -123,7 +125,7 @@ $(document).ready(function() {
   scraperwiki.sql.meta(function (response) {
     $.each(response.table, function (table_name, table) {
       var html = '<h2 class="inserter">' + table_name + '</h2> <ul>' + 
-	$.map(table.columnNames, function(col) { return '<li class="inserter">' + col + '</li>' }).join('') 
+	$.map(table.columnNames, function(col) { return '<li><span class="inserter">' + col + '</span></li>' }).join('') 
 	+ "</ul>"
       var $table = $(html)
       $('#schema').append($table)
