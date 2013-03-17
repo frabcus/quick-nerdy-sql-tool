@@ -1,12 +1,14 @@
 #editorPanel {
+  position: absolute;
   width: 100%;
-  height: 100px;
-  position: relative;
+  height: 150px;
 }
 
 #outputPanel {
+  position: absolute;
   width: 100%;
-  height: 400px;
+  top: 150px;
+  bottom: 15px;
   overflow: auto;
 }
 
@@ -26,9 +28,9 @@
   z-index: 100;
 }
 
-#help {
-  right: auto;
-  left: 15px;
+#run {
+  top: 15px;
+  bottom: auto;
 }
 
 #loading {
@@ -144,6 +146,16 @@
   table th:first-child,
   table td:first-child {
     padding-left: 20px;
+  }
+
+  #run {
+    top: auto;
+    bottom: 15px;
+  }
+
+  #help {
+    left: 15px;
+    right: auto;
   }
 
 }
