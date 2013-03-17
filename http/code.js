@@ -93,6 +93,8 @@ var load = function() {
       editor.setValue(data)
       editor.clearSelection()
       editor.focus()
+      run()
+      editor.on('change', run)
     }
   })
 }
@@ -100,6 +102,8 @@ var use_default_query_if_needed = function() {
   if (meta && loaded_empty) {
     if (editor.getValue() == "") {
       use_default_query()
+      run()
+      editor.on('change', run)
     }
   }
 }
@@ -188,7 +192,6 @@ $(function() {
   editor.session.setWrapLimitRange(null, null);
   editor.setTheme("ace/theme/clouds")
   editor.getSession().setMode("ace/mode/sql")
-  editor.on('change', run)
   load()
   get_meta()
   $('#run').on('click', run)
