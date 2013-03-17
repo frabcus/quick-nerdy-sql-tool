@@ -17,14 +17,14 @@ html {
   position: absolute;
   bottom: 40px;
   top: 20px;
-  width: 400px;
+  width: 440px;
   left: 240px;
 }
 #outputPanel { 
   position: absolute;
   bottom: 40px;
   top: 20px;
-  left: 660px;
+  left: 700px;
   right: 20px;
 }
 #editor {
