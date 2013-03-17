@@ -82,6 +82,40 @@ var real_save = function() {
 }
 var real_save_throttled = _.throttle(real_save, 750)
 
+var loaded_empty
+var load = function() {
+  scraperwiki.exec('mkdir -p code; touch code/query.sql; cat code/query.sql', function(data) {
+    data = data.replace(/\s\s*$/, '')
+    if (data == "") {
+      loaded_empty = true
+      use_default_query_if_needed()
+    } else {
+      editor.setValue(data)
+      editor.clearSelection()
+      editor.focus()
+    }
+  })
+}
+var use_default_query_if_needed = function() {
+  if (meta && loaded_empty) {
+    table = Object.keys(meta.table)[0]
+    cols = meta.table[table].columnNames
+    data = "select \n" + 
+    	"\t" + cols.slice(0, 3).join(",\n\t") + "\n" + 
+        "from " + table + "\n"
+    if (cols.length > 2) {
+        data += "-- where " + cols[Math.min(cols.length, 2)] + " > \n" +
+		"order by " + cols[1] + "\n"
+    }
+    
+    if (editor.getValue() == "") {
+      editor.setValue(data)
+      editor.clearSelection()
+      editor.focus()
+    }
+  }
+}
+
 var clear_run = function() {
   $('#querying').text("")
 }
@@ -97,32 +131,12 @@ var run = function() {
   real_run_throttled()
 }
 
-$(document).ready(function() {
-  editor = ace.edit("editor")
-  editor.renderer.setShowGutter(false)
-  editor.setTheme("ace/theme/clouds")
-  editor.getSession().setMode("ace/mode/sql")
-  editor.renderer.setPadding(40) 
-  scraperwiki.exec('mkdir -p code; touch code/query.sql; cat code/query.sql', function(data) {
-    var firstTime = false
-    data = data.replace(/\s\s*$/, '')
-    if (data == "") {
-      // data = "select * from "
-      firstTime = true
-    }
-    editor.setValue(data)
-    editor.clearSelection()
-    editor.focus()
-    if (!firstTime) {
-      run()
-    }
-  })
-
-  editor.on('change', function() {
-    run()
-  })
-
+var meta = null
+var get_meta = function() {
   scraperwiki.sql.meta(function (response) {
+    meta = response
+    use_default_query_if_needed()
+
     $.each(response.table, function (table_name, table) {
       var html = '<h2 class="inserter">' + table_name + '</h2> <ul>' + 
 	$.map(table.columnNames, function(col) { return '<li><span class="inserter">' + col + '</span></li>' }).join('') 
@@ -143,5 +157,16 @@ $(document).ready(function() {
       lastCursorPosition = editor.getCursorPosition()
     })
   }, function (jqXHR, textStatus, errorThrown) { err("Error getting schema", textStatus, true) } )
+}
+
+$(document).ready(function() {
+  editor = ace.edit("editor")
+  editor.renderer.setShowGutter(false)
+  editor.setTheme("ace/theme/clouds")
+  editor.getSession().setMode("ace/mode/sql")
+  editor.renderer.setPadding(40) 
+  editor.on('change', run)
+  load()
+  get_meta()
 })
 
