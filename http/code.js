@@ -1,11 +1,6 @@
 var editor
 var dirty = false
 
-var clear_run = function() {
-  $('#querying').text("Up to date")
-  $('#run').removeClass('loading').attr('disabled', false)
-}
-
 var real_run = function() {
   console.log("real_run called")
 
@@ -55,11 +50,14 @@ var real_save = function() {
 }
 var real_save_throttled = _.throttle(real_save, 1000)
 
+var clear_run = function() {
+  $('#run').removeClass('loading').attr('disabled', false)
+}
+
 var run = function() {
   console.log("run called")
 
   $(".alert").remove()
-  $('#querying').text("Querying...")
   $('#run').addClass('loading').attr('disabled', true)
 
   real_save_throttled()
