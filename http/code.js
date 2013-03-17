@@ -165,6 +165,7 @@ var get_meta = function() {
       html += '</ul>'
       $('#schema').append(html)
     })
+
     var lastCursorPosition = -1
     editor.on('change', function() {
       lastCursorPosition = -1
