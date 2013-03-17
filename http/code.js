@@ -107,6 +107,7 @@ var use_default_query_if_needed = function() {
         data += "-- where " + cols[Math.min(cols.length, 2)] + " > \n" +
 		"order by " + cols[1] + "\n"
     }
+    data += "limit 20" + "\n"
     
     if (editor.getValue() == "") {
       editor.setValue(data)
@@ -162,7 +163,7 @@ var get_meta = function() {
 $(document).ready(function() {
   editor = ace.edit("editor")
   editor.renderer.setShowGutter(false)
-  editor.setTheme("ace/theme/clouds")
+  editor.setTheme("ace/theme/textmate")
   editor.getSession().setMode("ace/mode/sql")
   editor.renderer.setPadding(40) 
   editor.on('change', run)
