@@ -181,17 +181,20 @@ var get_meta = function() {
       html += '</ul>'
       $('#schema').append(html)
 
-      scraperwiki.sql("select * from " + table_name + " order by random() limit 3", function (response) {
+      scraperwiki.sql("select * from " + table_name + " order by random() limit 1", function (response) {
         if (!response) {
           return
         }
   	$.each(response[0], function (key, value) {
 	  var code = '#colhelp' + table_name.hashCode() + key.hashCode()
-	  var txt = "(e.g. '" + value + "'"
-	  if (response.length > 1) {
-	    txt += ", '" + response[1][key] + "'"
+          if (value.length > 30) {
+            value = value.substr(0, 30) + "&hellip;"
           }
-	  txt += ")</span>"
+	  var txt = "e.g. '" + value + "'"
+	  /* not sure if this is worth it or just clutter - if enabling change limit 1 above to limit 2
+          if (response.length > 1) {
+	    txt += ", '" + response[1][key] + "'"
+          } */
 	  $(code).append(" <span class='example'>" + txt + "</span>")
   	})
        }, function (jqXHR, textStatus, errorThrown) { err("Error getting sample rows", textStatus, true) } )
