@@ -4,68 +4,56 @@
     <meta charset="utf-8">
     <title>Code your own SQL!</title>
 
-    <link rel="stylesheet" href="http://x.scraperwiki.com/vendor/style/bootstrap.min.css">
-    <link rel="stylesheet" href="http://x.scraperwiki.com/style/scraperwiki.css">
+    <link rel="stylesheet" href="//x.scraperwiki.com/vendor/style/bootstrap.min.css">
+    <link rel="stylesheet" href="//x.scraperwiki.com/style/scraperwiki.css">
     <link rel="stylesheet" href="style.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
-    <script src="jquery.hotkeys-0.7.9.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 
-    <script src="http://x.scraperwiki.com/vendor/js/bootstrap.min.js"></script>
-    <script src="https://x.scraperwiki.com/js/scraperwiki.js"></script>
+    <script src="//x.scraperwiki.com/vendor/js/bootstrap.min.js"></script>
+    <script src="//x.scraperwiki.com/js/scraperwiki.js"></script>
     <script src="ace/ace.js" type="text/javascript" charset="utf-8"></script>
 
     <script src="code.js" type="text/javascript" charset="utf-8"></script>
   </head>
   <body>
 
-   <div id="schemaPanel">
-     <div id="schema">
-       <h1>Tables</h1>
-     </div>
-   </div>
+    <div id="schemaPanel">
+      <div id="schema"></div>
+    </div>
 
-   <div id="editorPanel">
-     <div id="editor"></div>
-   </div>
-
-   <div id="helpPanel">
-     <div class="btn-group dropup" id="help">
-	<a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
-	  Help
-	  <span class="caret"></span>
-	</a>
-	<ul class="dropdown-menu">
-	  <li><a href="http://zetcode.com/db/sqlite/select/" target="_blank">Basic SQL tutorial</a></li>
-	  <li class="dropdown-submenu">
-	    <a tabindex="-1" href="#">Replace your query&hellip;</a>
-	    <ul class="dropdown-menu">
-	       <li><a onClick="use_default_query();"><span class="label label-warning">Warning!</span> Basic example</a></li>
-	       <li><a onClick="use_group_query();"><span class="label label-warning">Warning!</span> Grouping example</a></li>
-	    </ul>
-	  </li>
-	  <li class="divider"></li>
-	  <li><a href="http://www.sqlite.org/lang_corefunc.html" target="_blank">SQLite core functions</a></li>
-	  <li><a href="http://www.sqlite.org/lang_datefunc.html" target="_blank">SQLite date/time functions</a></li>
- 	  <li><a href="http://www.sqlite.org/lang_aggfunc.html" target="_blank">SQLite aggregate functions</a></li>
- 	  <li class="divider"></li>
- 	  <li><a href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts" target="_blank">Editor keyboard shortcuts</a></li>
- 	</ul>
-       </div>
- 
-      <span id="querying" class="muted">
-      </span>
+    <div id="editorPanel">
+      <div id="editor"></div>
+      <button class="btn btn-primary" id="run">Run <i class="icon-arrow-right"></i></button>
+      <div class="btn-group dropup" id="help">
+        <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">Help <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="http://zetcode.com/db/sqlite/select/" target="_blank">Basic SQL tutorial</a></li>
+          <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Replace your query&hellip;</a>
+            <ul class="dropdown-menu">
+               <li><a onClick="use_default_query();"><span class="label label-warning">Warning!</span> Basic example</a></li>
+               <li><a onClick="use_group_query();"><span class="label label-warning">Warning!</span> Grouping example</a></li>
+            </ul>
+          </li>
+          <li class="divider"></li>
+          <li><a href="http://www.sqlite.org/lang_corefunc.html" target="_blank">SQLite core functions</a></li>
+          <li><a href="http://www.sqlite.org/lang_datefunc.html" target="_blank">SQLite date/time functions</a></li>
+          <li><a href="http://www.sqlite.org/lang_aggfunc.html" target="_blank">SQLite aggregate functions</a></li>
+          <li class="divider"></li>
+          <li><a href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts" target="_blank">Editor keyboard shortcuts</a></li>
+         </ul>
+      </div>
     </div>
 
     <div id="outputPanel">
-      <table class="table table-striped" id="table"> 
+      <table class="table table-striped" id="table"></table>
       <div id="problem"></div>
-      </table>
     </div>
 
-    <div id="loading">
-    </div>
+    <div id="loading"></div>
+
   </body>
 </html>
 

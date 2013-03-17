@@ -40,13 +40,13 @@ var real_run = function() {
       clear_unimportant_errors()
 
       if (!response || response.length < 1) {
-	err("No data", "The table is empty") 
+	err("No data", "The table is empty")
       } else {
 	var $head = $('<thead><tr></tr></thead>')
 	$.each(response[0], function (key, value) {
 	  $('tr', $head).append('<th>' + key + '</th>')
 	})
-       
+
 	$('#problem').hide()
 	$('#table').empty()
 	$('#table').append($head)
@@ -76,8 +76,8 @@ var real_save = function() {
   var cmd = "mkdir -p code; cat >code/query.sql.$$.new <<ENDOFSCRAPER\n" + code + "\nENDOFSCRAPER\n"
   cmd = cmd + "mv code/query.sql.$$.new code/query.sql"
   scraperwiki.exec(cmd, function () {
-  }, function (jqXHR, textStatus, errorThrown) { 
-    err("Error saving query", textStatus, true) 
+  }, function (jqXHR, textStatus, errorThrown) {
+    err("Error saving query", textStatus, true)
   })
 }
 var real_save_throttled = _.throttle(real_save, 750)
@@ -106,15 +106,15 @@ var use_default_query_if_needed = function() {
 var use_default_query = function() {
   table = Object.keys(meta.table)[0]
   cols = meta.table[table].columnNames
-  data = "select \n" + 
-      "\t" + cols.slice(0, 3).join(",\n\t") + "\n" + 
+  data = "select \n" +
+      "\t" + cols.slice(0, 3).join(",\n\t") + "\n" +
       "from " + table + "\n"
   if (cols.length > 2) {
       data += "-- where " + cols[Math.min(cols.length, 2)] + " > \n" +
 	      "order by " + cols[1] + "\n"
   }
   data += "limit 20" + "\n"
-  
+
   editor.setValue(data)
   editor.clearSelection()
   editor.focus()
@@ -123,14 +123,14 @@ var use_group_query = function() {
   table = Object.keys(meta.table)[0]
   cols = meta.table[table].columnNames
   var col = Math.min(cols.length, 2)
-  data = "select \n" + 
+  data = "select \n" +
       "\t" + cols[col] + ",\n" +
-      "\tcount(*) as c\n" + 
+      "\tcount(*) as c\n" +
       "from " + table + "\n"
   data += "group by " + cols[col] + "\n"
   data += "order by c desc\n"
   data += "limit 20" + "\n"
-  
+
   editor.setValue(data)
   editor.clearSelection()
   editor.focus()
@@ -158,11 +158,12 @@ var get_meta = function() {
     use_default_query_if_needed()
 
     $.each(response.table, function (table_name, table) {
-      var html = '<h2 class="inserter">' + table_name + '</h2> <ul>' + 
-	$.map(table.columnNames, function(col) { return '<li><span class="inserter">' + col + '</span></li>' }).join('') 
-	+ "</ul>"
-      var $table = $(html)
-      $('#schema').append($table)
+      var html = '<h2 class="inserter">' + table_name + '</h2> <ul>'
+      _.each(table.columnNames, function(colname){
+        html += '<li class="inserter">' + colname + '</li>'
+      })
+      html += '</ul>'
+      $('#schema').append(html)
     })
     var lastCursorPosition = -1
     editor.on('change', function() {
@@ -179,14 +180,16 @@ var get_meta = function() {
   }, function (jqXHR, textStatus, errorThrown) { err("Error getting schema", textStatus, true) } )
 }
 
-$(document).ready(function() {
+$(function() {
   editor = ace.edit("editor")
   editor.renderer.setShowGutter(false)
-  editor.setTheme("ace/theme/textmate")
+  editor.session.setUseWrapMode(true);
+  editor.session.setWrapLimitRange(null, null);
+  editor.setTheme("ace/theme/clouds")
   editor.getSession().setMode("ace/mode/sql")
-  editor.renderer.setPadding(40) 
   editor.on('change', run)
   load()
   get_meta()
+  $('#run').on('click', run)
 })
 
