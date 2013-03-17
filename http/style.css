@@ -1,84 +1,37 @@
-body {
-  height: 100%;
+#editorPanel {
+  width: 100%;
+  height: 100px;
+  position: relative;
 }
-html {
-  height: 100%;
-}
-#schemaPanel { 
-  position: absolute;
-  bottom: 60px;
-  top: 20px;
-  width: 180px;
-  left: 20px;
+
+#outputPanel {
+  width: 100%;
+  height: 400px;
   overflow: auto;
 }
-#editorPanel { 
-  position: absolute;
-  bottom: 40px;
-  top: 20px;
-  width: 440px;
-  left: 240px;
+
+#schemaPanel {
+  display: none;
 }
-#outputPanel { 
-  position: absolute;
-  bottom: 40px;
-  top: 20px;
-  left: 700px;
-  right: 20px;
-}
+
 #editor {
   width: 100%;
   height: 100%;
 }
-#table {
-  width: 100%;
-  height: 100%;
-}
-#table {
-  overflow: auto;
-  display: block;
-}
-.inserter {
-  cursor: pointer
-}
-p.loading { 
-  display: none;
-  margin-top: 100px;
-  padding-top: 50px;
-  text-align: center;
-  background: transparent url('tool-loader.gif') center top no-repeat;
-  color: #666;
-  font-size: 20px;
-}
-#helpPanel {
+
+#run, #help {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
+  bottom: 15px;
+  right: 15px;
+  z-index: 100;
 }
 
-#schemaPanel {
-  background-color: #f9f9f9;
-  padding: 10px;
-}
-#schema {
-  width: 100%;
-}
-#schema h2 {
-  margin-bottom: 0px;
-  margin-left: 10px;
-}
-#schema ul {
-  margin-top: 0px;
-  margin-left: 20px;
-  margin-right: 0px;
-  margin-bottom: 10px;
-}
-#schema li {
-  line-height: 20px;
-  list-style-type: none;
+#help {
+  right: auto;
+  left: 15px;
 }
 
-div#loading {
+#loading {
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -89,3 +42,108 @@ div#loading {
   display: none;
 }
 
+#problem {
+  margin-left: 20px;
+}
+
+.inserter,
+.dropdown-menu a {
+  cursor: pointer;
+}
+
+.inserter:hover {
+  text-decoration: underline;
+}
+
+/* This is probably quite naughty */
+
+#editorPanel {
+  padding: 10px 0 10px 10px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.ace_scrollbar {
+  display: none;
+}
+
+
+@media only screen and (min-width: 620px) {
+
+  body, html {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  #schemaPanel,
+  #editorPanel,
+  #outputPanel {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+  }
+
+  #schemaPanel {
+    display: block;
+    left: 0;
+    width: 20%;
+    background-color: #e4e8ee;
+    overflow: auto;
+  }
+
+  #editorPanel {
+    left: 20%;
+    width: 30%;
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    z-index: 999;
+  }
+
+  #outputPanel {
+    left: 50%;
+    width: 50%;
+  }
+
+  #schemaPanel h1 {
+    font-size: 12px;
+    line-height: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 10px 15px;
+  }
+
+  #schemaPanel h2 {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 20px;
+    margin: 10px 15px 5px 10px;
+    background: transparent url(table.png) 0 50% no-repeat;
+    padding-left: 25px;
+    color: #6d7e9b;
+    text-shadow: 0 1px 0 #fff;
+  }
+
+  #schemaPanel ul {
+    margin: 0 0 15px 0;
+    list-style: none;
+  }
+
+  #schemaPanel li {
+    font-size: 14px;
+    line-height: 18px;
+    margin: 5px 15px 5px 35px;
+    color: #6d7e9b;
+    text-shadow: 0 1px 0 #fff;
+    margin-bottom: 5px;
+  }
+
+  table th:first-child,
+  table td:first-child {
+    padding-left: 20px;
+  }
+
+}
