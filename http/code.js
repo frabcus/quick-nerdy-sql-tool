@@ -28,10 +28,10 @@ var real_run = function() {
 	})
 	$('#table').append($tbody)
       }
-      clear_run()
+      clear_run_debounced()
   }, function (response) {
       err("Error in SQL", jQuery.parseJSON(response.responseText))
-      clear_run()
+      clear_run_debounced()
   })
 }
 var real_run_throttled = _.throttle(real_run, 500)
@@ -45,14 +45,14 @@ var real_save = function() {
   scraperwiki.exec(cmd, function () {
   }, function (jqXHR, textStatus, errorThrown) { 
     err("Error saving query", textStatus) 
-    clear_run()
   })
 }
-var real_save_throttled = _.throttle(real_save, 1000)
+var real_save_throttled = _.throttle(real_save, 500)
 
 var clear_run = function() {
   $('#run').removeClass('loading').attr('disabled', false)
 }
+var clear_run_debounced = _.debounce(clear_run, 500)
 
 var run = function() {
   console.log("run called")
