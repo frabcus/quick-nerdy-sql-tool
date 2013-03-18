@@ -174,24 +174,29 @@ var get_meta = function() {
     use_default_query_if_needed()
 
     $.each(response.table, function (table_name, table) {
-      var html = '<h2 class="inserter">' + table_name + '</h2> <ul>'
+      var html = '<div class="inserterHit"><h2 class="inserter">' + table_name + '</h2></div> <ul>'
       _.each(table.columnNames, function(colname){
-        html += '<li id="colhelp' + table_name.hashCode() + colname.hashCode() + '"><span class="inserter">' + colname + '<span></li>'
+        html += '<li class="inserterHit" id="colhelp' + table_name.hashCode() + colname.hashCode() + '"><span class="inserter">' + colname + '<span></li>'
       })
       html += '</ul>'
       $('#schema').append(html)
 
-      scraperwiki.sql("select * from " + table_name + " order by random() limit 3", function (response) {
+      scraperwiki.sql("select * from " + table_name + " order by random() limit 10", function (response) {
         if (!response) {
           return
         }
+	console.log(response)
   	$.each(response[0], function (key, value) {
 	  var code = '#colhelp' + table_name.hashCode() + key.hashCode()
-	  var txt = "(e.g. '" + value + "'"
-	  if (response.length > 1) {
-	    txt += ", '" + response[1][key] + "'"
-          }
-	  txt += ")</span>"
+	  var txt = "e.g. "
+          var examples = []
+	  $.each(response, function (ix, row) {
+            if (row[key] != null) {
+              examples.push("'" + row[key] + "'")
+            }
+          })
+	  txt += _.uniq(examples).join(", ")
+	  txt += "</span>"
 	  $(code).append(" <span class='example'>" + txt + "</span>")
   	})
        }, function (jqXHR, textStatus, errorThrown) { err("Error getting sample rows", textStatus, true) } )
@@ -201,11 +206,11 @@ var get_meta = function() {
     editor.on('change', function() {
       lastCursorPosition = -1
     })
-    $('.inserter').click(function() {
+    $('.inserterHit').click(function() {
       if (JSON.stringify(lastCursorPosition) == JSON.stringify(editor.getCursorPosition())) {
 	editor.insert(', ')
       }
-      editor.insert($(this).text())
+      editor.insert($(".inserter", this).text())
       editor.focus()
       lastCursorPosition = editor.getCursorPosition()
     })

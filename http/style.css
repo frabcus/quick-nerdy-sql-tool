@@ -49,12 +49,12 @@
   margin-left: 20px;
 }
 
-.inserter,
+.inserterHit,
 .dropdown-menu a {
   cursor: pointer;
 }
 
-.inserter:hover {
+.inserterHit:hover .inserter {
   text-decoration: underline;
 }
 
@@ -146,12 +146,20 @@
 
   #schemaPanel li .example {
     font-size: 12px;
-    display: inline;
-    display: none;
+
+    -webkit-transition: height 100ms linear;
+    -moz-transition: height 100ms linear;
+    -ms-transition: height 100ms linear;
+    -o-transition: height 100ms linear;
+    transition: height 100ms linear;
+
+    height: 0;
+    overflow: hidden;
+    display: block;
+    white-space: pre;
   }
   #schemaPanel li:hover .example {
-    font-size: 12px;
-    display: inline;
+    height: 20px;
   }
 
   table th:first-child,
