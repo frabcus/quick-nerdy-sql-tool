@@ -210,7 +210,11 @@ var get_meta = function() {
       if (JSON.stringify(lastCursorPosition) == JSON.stringify(editor.getCursorPosition())) {
 	editor.insert(', ')
       }
-      editor.insert($(".inserter", this).text())
+      var col_name = $(".inserter", this).text()
+      // quote the column name if there are any odd characters in it
+      if (/[^A-Za-z0-9_]/.test(col_name))
+	col_name = '"' + col_name + '"'
+      editor.insert(col_name)
       editor.focus()
       lastCursorPosition = editor.getCursorPosition()
     })
