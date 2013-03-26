@@ -1,3 +1,7 @@
+body {
+  padding: 0;  
+}
+
 #editorPanel {
   position: absolute;
   width: 100%;
