@@ -161,6 +161,7 @@ body {
     overflow: hidden;
     display: block;
     white-space: pre;
+    text-overflow: ellipsis;
   }
   #schemaPanel li:hover .example {
     height: 20px;
