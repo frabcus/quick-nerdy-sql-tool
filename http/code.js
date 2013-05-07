@@ -155,6 +155,14 @@ var run = function() {
   real_run_throttled()
 }
 
+var api_json = function() {
+  var code = editor.getValue()
+  var target = scraperwiki.readSettings().target
+  var json_url = target.url + "/sql/?q=" + encodeURIComponent(code)
+  window.open(json_url, "_json_api_" + target.box)
+
+}
+
 // http://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
 String.prototype.hashCode = function(){
     var hash = 0, i, char;
