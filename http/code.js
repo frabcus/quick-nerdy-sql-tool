@@ -73,7 +73,7 @@ var real_save = function() {
   console.log("real_save called")
 
   var code = editor.getValue()
-  var cmd = "mkdir -p code; cat >code/query.sql.$$.new <<ENDOFSCRAPER\n" + code + "\nENDOFSCRAPER\n"
+  var cmd = "mkdir -p code; cat >code/query.sql.$$.new <<\"ENDOFSCRAPER\"\n" + code + "\nENDOFSCRAPER\n"
   cmd = cmd + "mv code/query.sql.$$.new code/query.sql"
   scraperwiki.exec(cmd, function () {
   }, function (jqXHR, textStatus, errorThrown) {
@@ -160,8 +160,29 @@ var api_json = function() {
   var target = scraperwiki.readSettings().target
   var json_url = target.url + "/sql/?q=" + encodeURIComponent(code)
   window.open(json_url, "_json_api_" + target.box)
-
 }
+
+/* 
+This doesn't work yet - needs better user interface to display
+
+  var api_table_static = function() {
+  var table_html = "<html><head>" +
+    '<link rel="stylesheet" href="//x.scraperwiki.com/vendor/style/bootstrap.min.css">' +
+    '<link rel="stylesheet" href="//x.scraperwiki.com/style/scraperwiki.css">' e
+    "</head><body>" + $('#table').parent().html() + "</body></html>"
+
+  var filename = "table.html"
+  var cmd = "cat >http/" + filename + ".new <<\"ENDOFTABLE\"\n" + table_html + "\nENDOFTABLE\n"
+  cmd = cmd + "mv http/" + filename + ".new http/" + filename
+
+  scraperwiki.exec(cmd, function () {
+    var source = scraperwiki.readSettings().source
+    var table_static_url = source.url + "/http/" + encodeURIComponent(filename)
+    window.open(table_static_url, "_table_static_api_" + source.box)
+  }, function (jqXHR, textStatus, errorThrown) {
+    err("Error saving static table", textStatus, true)
+  })
+} */
 
 // http://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
 String.prototype.hashCode = function(){
