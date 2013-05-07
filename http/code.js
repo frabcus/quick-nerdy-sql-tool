@@ -252,6 +252,7 @@ var get_meta = function() {
 
 $(function() {
   editor = ace.edit("editor")
+  editor.setFontSize(16)
   editor.renderer.setShowGutter(false)
   editor.session.setUseWrapMode(true);
   editor.session.setWrapLimitRange(null, null);
