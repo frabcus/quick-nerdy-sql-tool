@@ -40,11 +40,10 @@ body {
 
 #api {
   position: absolute;
-  bottom: 15px;
+  top: 15px;
   right: 15px;
   z-index: 100;
 }
-
 
 #loading {
   position: absolute;
@@ -190,5 +189,11 @@ body {
     left: 15px;
     right: auto;
   }
+
+  #api {
+    top: auto;
+    bottom: 15px;
+  }
+
 
 }
