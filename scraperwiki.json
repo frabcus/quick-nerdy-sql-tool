@@ -1,6 +1,7 @@
 {
   "displayName": "Query with SQL",
-  "gitUrl": "git@github.com:frabcus/quick-nerdy-sql-tool.git",
-  "description": "Beautiful tables and JSON API endpoints"
+  "description": "Beautiful tables and JSON API endpoints",
+  "icon": "https://s3-eu-west-1.amazonaws.com/sw-icons/tool-icon-sql.png",
+  "color": "#17959d"
 }
 
