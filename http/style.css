@@ -25,35 +25,13 @@ body {
   height: 100%;
 }
 
-#run, #help {
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-  z-index: 100;
-}
-
-#run {
-  top: 15px;
-  bottom: auto;
-  display: none; /* A/B test this :) */
-}
-
-#api {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  z-index: 100;
-}
-
-#loading {
+#editorPanel .btn-toolbar {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  width: 32px;
-  height: 32px;
-  background: transparent url('tool-loader.gif') no-repeat;
-  color: #666;
-  display: none;
+  left: 20px;
+  z-index: 100;
+  margin: 0;
 }
 
 #problem {
@@ -179,21 +157,5 @@ body {
   table td:first-child {
     padding-left: 20px;
   }
-
-  #run {
-    top: auto;
-    bottom: 15px;
-  }
-
-  #help {
-    left: 15px;
-    right: auto;
-  }
-
-  #api {
-    top: auto;
-    bottom: 15px;
-  }
-
 
 }

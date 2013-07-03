@@ -25,45 +25,44 @@
 
     <div id="editorPanel">
       <div id="editor"></div>
-      <button class="btn btn-primary" id="run">Run <i class="icon-arrow-right"></i></button>
-      <div class="btn-group dropup" id="help">
-        <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">Help <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="http://zetcode.com/db/sqlite/select/" target="_blank">Basic SQL tutorial</a></li>
-          <li class="dropdown-submenu">
-            <a tabindex="-1" href="#">Example queries&hellip;</a>
-            <ul class="dropdown-menu">
-               <li class="disabled"><a tabindex="-1" href="#"><span class="label label-warning">Warning!</span> Replaces your current query:</a></li>
-               <li><a onClick="use_default_query();">Basic example</a></li>
-               <li><a onClick="use_group_query();">Grouping example</a></li>
+      <div class="btn-toolbar">
+         <button class="btn btn-primary pull-right" id="run">Run <i class="icon-arrow-right"></i></button>
+         <div class="btn-group dropup" id="help">
+           <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">Help <span class="caret"></span></a>
+           <ul class="dropdown-menu">
+             <li><a href="http://zetcode.com/db/sqlite/select/" target="_blank">Basic SQL tutorial</a></li>
+             <li class="dropdown-submenu">
+               <a tabindex="-1" href="#">Example queries&hellip;</a>
+               <ul class="dropdown-menu">
+                  <li class="disabled"><a tabindex="-1" href="#"><span class="label label-warning">Warning!</span> Replaces your current query:</a></li>
+                  <li><a onClick="use_default_query();">Basic example</a></li>
+                  <li><a onClick="use_group_query();">Grouping example</a></li>
+               </ul>
+             </li>
+             <li class="divider"></li>
+             <li><a href="http://www.sqlite.org/lang_corefunc.html" target="_blank">SQLite core functions</a></li>
+             <li><a href="http://www.sqlite.org/lang_datefunc.html" target="_blank">SQLite date/time functions</a></li>
+             <li><a href="http://www.sqlite.org/lang_aggfunc.html" target="_blank">SQLite aggregate functions</a></li>
+             <li class="divider"></li>
+             <li><a href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts" target="_blank">Editor keyboard shortcuts</a></li>
             </ul>
-          </li>
-          <li class="divider"></li>
-          <li><a href="http://www.sqlite.org/lang_corefunc.html" target="_blank">SQLite core functions</a></li>
-          <li><a href="http://www.sqlite.org/lang_datefunc.html" target="_blank">SQLite date/time functions</a></li>
-          <li><a href="http://www.sqlite.org/lang_aggfunc.html" target="_blank">SQLite aggregate functions</a></li>
-          <li class="divider"></li>
-          <li><a href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts" target="_blank">Editor keyboard shortcuts</a></li>
-         </ul>
+         </div>
+         <button class="btn btn-warning" id="api" onclick="api_json()">JSON API</button>
+         <!-- <div class="btn-group dropup" id="api">
+           <a class="btn btn-warning dropdown-toggle" data-toggle="dropdown" href="#">API link <span class="caret"></span></a>
+           <ul class="dropdown-menu">
+             <li><a onClick="api_table_static();">HTML table (static)</a></li>
+             <li class="divider"></li>
+             <li><a onClick="api_json();">JSON (live)</a></li>
+            </ul>
+         </div> -->
       </div>
-      <button class="btn btn-warning" id="api" onclick="api_json()">JSON API</button>
-      <!-- <div class="btn-group dropup" id="api">
-        <a class="btn btn-warning dropdown-toggle" data-toggle="dropdown" href="#">API link <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a onClick="api_table_static();">HTML table (static)</a></li>
-          <li class="divider"></li>
-          <li><a onClick="api_json();">JSON (live)</a></li>
-         </ul>
-      </div> -->
     </div>
 
     <div id="outputPanel">
       <table class="table table-striped" id="table"></table>
       <div id="problem"></div>
     </div>
-
-    <div id="loading"></div>
-
   </body>
 </html>
 

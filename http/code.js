@@ -61,13 +61,12 @@ var real_run = function() {
 	})
 	$('#table').append($tbody)
       }
-      clear_run_debounced()
+      show_not_loading()
   }, function (response) {
       err("Error in SQL", jQuery.parseJSON(response.responseText))
-      clear_run_debounced()
+      show_not_loading()
   })
 }
-var real_run_throttled = _.throttle(real_run, 750)
 
 var real_save = function() {
   console.log("real_save called")
@@ -94,7 +93,7 @@ var load = function() {
       editor.clearSelection()
       editor.focus()
       run()
-      editor.on('change', run)
+      editor.on('change', real_save_throttled)
     }
   })
 }
@@ -103,7 +102,7 @@ var use_default_query_if_needed = function() {
     if (editor.getValue() == "") {
       use_default_query()
       run()
-      editor.on('change', run)
+      editor.on('change', real_save_throttled)
     }
   }
 }
@@ -140,19 +139,21 @@ var use_group_query = function() {
   editor.focus()
 }
 
-var clear_run = function() {
-  $('#loading').hide()
+var show_loading = function() {
+  $('#run').addClass('loading').html('Running&hellip;')
 }
-var clear_run_debounced = _.debounce(clear_run, 750)
+
+var show_not_loading = function() {
+  $('#run').removeClass('loading').html('Run <i class="icon-arrow-right"></i>')
+}
 
 var run = function() {
   console.log("run called")
 
-  $('#loading').show()
+  show_loading()
   clear_unimportant_errors()
 
-  real_save_throttled()
-  real_run_throttled()
+  real_run()
 }
 
 var api_json = function() {
