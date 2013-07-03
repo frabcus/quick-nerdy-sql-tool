@@ -1,35 +1,12 @@
 var editor
 
-var latest_error
-var latest_error_important = false
-var err = function(head, body, important) {
+var err = function(head, body) {
   console.log("got an error")
 
-  if (important || !latest_error_important) {
-    latest_error = '<h1>' + head + '</h1><p>' + body + '</p>'
-  }
-
-  clearTimeout(show_latest_error)
-  if (!important) {
-    setTimeout(show_latest_error, 1000)
-  } else {
-    show_latest_error()
-  }
-}
-var show_latest_error = function() {
-  if (latest_error) {
-    console.log("error shown")
-    $('#table').empty()
-    $('#problem').html(latest_error)
-    $('#problem').show()
-  }
-}
-var clear_unimportant_errors = function() {
-  console.log("clear_unimportant_errors", latest_error_important)
-  if (!latest_error_important) {
-    latest_error = null
-    clearTimeout(show_latest_error)
-  }
+  latest_error = '<h1>' + head + '</h1><p>' + body + '</p>'
+  $('#table').empty()
+  $('#problem').html(latest_error)
+  $('#problem').show()
 }
 
 var real_run = function() {
@@ -37,8 +14,6 @@ var real_run = function() {
 
   var code = editor.getValue()
   scraperwiki.sql(code, function (response) {
-      clear_unimportant_errors()
-
       if (!response || response.length < 1) {
 	err("No data", "The table is empty")
       } else {
@@ -151,8 +126,6 @@ var run = function() {
   console.log("run called")
 
   show_loading()
-  clear_unimportant_errors()
-
   real_run()
 }
 
@@ -215,7 +188,7 @@ var get_meta = function() {
         if (!response) {
           return
         }
-	console.log(response)
+	//console.log(response)
   	$.each(response[0], function (key, value) {
 	  var code = '#colhelp' + table_name.hashCode() + key.hashCode()
 	  var txt = "e.g. "
