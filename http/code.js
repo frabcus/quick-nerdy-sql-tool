@@ -262,5 +262,17 @@ $(function() {
   load()
   get_meta()
   $('#run').on('click', run)
+
+  $(document).on('keydown', function(e){
+    // the keycode for "enter" is 13
+    if((e.ctrlKey || e.metaKey) && e.which==13) {
+      run()
+      e.preventDefault()
+    }
+    // eat ctrl+s for save (see https://github.com/frabcus/code-scraper-in-browser-tool/issues/56)
+    if ((e.ctrlKey || e.metaKey) && e.which==83) {
+      e.preventDefault()
+    }
+  })
 })
 
