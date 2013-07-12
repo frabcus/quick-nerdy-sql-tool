@@ -141,8 +141,8 @@ This doesn't work yet - needs better user interface to display
 
   var api_table_static = function() {
   var table_html = "<html><head>" +
-    '<link rel="stylesheet" href="//x.scraperwiki.com/vendor/style/bootstrap.min.css">' +
-    '<link rel="stylesheet" href="//x.scraperwiki.com/style/scraperwiki.css">' e
+    '<link rel="stylesheet" href="//scraperwiki.com/vendor/style/bootstrap.min.css">' +
+    '<link rel="stylesheet" href="//scraperwiki.com/style/scraperwiki.css">' e
     "</head><body>" + $('#table').parent().html() + "</body></html>"
 
   var filename = "table.html"
